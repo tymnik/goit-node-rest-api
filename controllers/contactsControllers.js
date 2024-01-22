@@ -1,13 +1,13 @@
 import * as contactsService from "../services/contactsServices.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
-import HttpError from "../helpers/HttpError.js";
+import { HttpError } from "../helpers/HttpError.js";
 
-export const getAllContacts = async (req, res) => {
+const getAllContacts = async (req, res) => {
   const contacts = await contactsService.listContacts();
   res.json(contacts);
 };
 
-export const getContactById = async (req, res) => {
+const getContactById = async (req, res) => {
   const { id } = req.params;
   const contact = await contactsService.getContactById(id);
 
@@ -18,7 +18,7 @@ export const getContactById = async (req, res) => {
   }
 };
 
-export const deleteContact = async (req, res) => {
+const deleteContact = async (req, res) => {
   const { id } = req.params;
   const deletedContact = await contactsService.removeContact(id);
 
@@ -29,13 +29,13 @@ export const deleteContact = async (req, res) => {
   }
 };
 
-export const createContact = async (req, res) => {
+const createContact = async (req, res) => {
   const { body } = req;
   const newContact = await contactsService.addContact(body);
   res.status(201).json(newContact);
 };
 
-export const updateContact = async (req, res) => {
+const updateContact = async (req, res) => {
   const { id } = req.params;
   const updatedContact = await contactsService.updateContactById(id, req.body);
 
