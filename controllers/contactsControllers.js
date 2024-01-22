@@ -1,100 +1,55 @@
 import * as contactsService from "../services/contactsServices.js";
-import {
-  createContactSchema,
-  updateContactSchema,
-} from "../schemas/contactsSchemas.js";
+import ctrlWrapper from "../helpers/ctrlWrapper.js";
+import HttpError from "../helpers/HttpError.js";
 
 export const getAllContacts = async (req, res) => {
-  try {
-    const contacts = await contactsService.listContacts();
-    res.json(contacts);
-  } catch (error) {
-    console.error("Error fetching all contacts:", error);
-    res.status(500).send("Internal Server Error");
-  }
+  const contacts = await contactsService.listContacts();
+  res.json(contacts);
 };
 
 export const getContactById = async (req, res) => {
   const { id } = req.params;
+  const contact = await contactsService.getContactById(id);
 
-  try {
-    const contact = await contactsService.getContactById(id);
-
-    if (contact) {
-      res.json(contact);
-    } else {
-      res.status(404).json({ message: "Not found" });
-    }
-  } catch (error) {
-    console.error("Error fetching contact by ID:", error);
-    res.status(500).send("Internal Server Error");
+  if (contact) {
+    res.json(contact);
+  } else {
+    res.status(404).json(HttpError(404, "Not found"));
   }
 };
 
 export const deleteContact = async (req, res) => {
   const { id } = req.params;
+  const deletedContact = await contactsService.removeContact(id);
 
-  try {
-    const deletedContact = await contactsService.removeContact(id);
-
-    if (deletedContact) {
-      res.json(deletedContact);
-    } else {
-      res.status(404).json({ message: "Not found" });
-    }
-  } catch (error) {
-    console.error("Error deleting contact:", error);
-    res.status(500).send("Internal Server Error");
+  if (deletedContact) {
+    res.json(deletedContact);
+  } else {
+    res.status(404).json(HttpError(404, "Not found"));
   }
 };
 
 export const createContact = async (req, res) => {
   const { body } = req;
-
-  try {
-    const { error } = createContactSchema.validate(body);
-
-    if (error) {
-      return res.status(400).json({ message: error.message });
-    }
-
-    const newContact = await contactsService.addContact(body);
-
-    res.status(201).json(newContact);
-  } catch (error) {
-    console.error("Error creating contact:", error);
-    res.status(500).send("Internal Server Error");
-  }
+  const newContact = await contactsService.addContact(body);
+  res.status(201).json(newContact);
 };
 
 export const updateContact = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
+  const existingContact = await contactsService.getContactById(id);
 
-  try {
-    const { error } = updateContactSchema.validate(body);
-
-    if (error) {
-      return res.status(400).json({ message: error.message });
-    }
-
-    if (!Object.keys(body).length) {
-      return res
-        .status(400)
-        .json({ message: "Body must have at least one field" });
-    }
-
-    const existingContact = await contactsService.getContactById(id);
-
-    if (!existingContact) {
-      return res.status(404).json({ message: "Not found" });
-    }
-
-    const updatedContact = await contactsService.updateContact(id, body);
-
-    res.json(updatedContact);
-  } catch (error) {
-    console.error("Error updating contact:", error);
-    res.status(500).send("Internal Server Error");
+  if (!existingContact) {
+    throw new HttpError(404, "Not found");
   }
+
+  const updatedContact = await contactsService.updateContact(id, body);
+  res.json(updatedContact);
 };
+
+export const getAllContactsWrapped = ctrlWrapper(getAllContacts);
+export const getContactByIdWrapped = ctrlWrapper(getContactById);
+export const deleteContactWrapped = ctrlWrapper(deleteContact);
+export const createContactWrapped = ctrlWrapper(createContact);
+export const updateContactWrapped = ctrlWrapper(updateContact);
