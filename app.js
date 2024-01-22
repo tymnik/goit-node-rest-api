@@ -1,7 +1,6 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import HttpError from "./helpers/HttpError.js";
 
 import contactsRouter from "./routes/contactsRouter.js";
 
@@ -14,8 +13,7 @@ app.use(express.json());
 app.use("/api/contacts", contactsRouter);
 
 app.use((_, res) => {
-  const notFoundError = HttpError(404);
-  res.status(notFoundError.status).json({ message: notFoundError.message });
+  res.status(404).json({ message: "Route not found" });
 });
 
 app.use((err, req, res, next) => {

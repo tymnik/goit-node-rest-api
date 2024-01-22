@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const contactsPath = join(__dirname, "db", "contacts.json");
+const contactsPath = join(__dirname, "../db", "contacts.json");
 
 async function readContactsFile() {
   const data = await fs.readFile(contactsPath);
@@ -53,4 +53,26 @@ async function addContact(data) {
   return newContact;
 }
 
-export { listContacts, getContactById, removeContact, addContact };
+async function updateContactById(id, data) {
+  const contacts = await readContactsFile();
+
+  const index = contacts.findIndex((contact) => contact.id === id);
+
+  if (index !== -1) {
+    contacts[index] = { ...contacts[index], ...data };
+
+    await writeContactsFile(contacts);
+
+    return contacts[index];
+  } else {
+    return null;
+  }
+}
+
+export {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  updateContactById,
+};
