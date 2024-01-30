@@ -12,7 +12,7 @@ async function getContactById(id) {
 }
 
 async function removeContact(id) {
-  const removedContact = await Contact.findByIdAndRemove(id);
+  const removedContact = await Contact.findByIdAndDelete(id);
   return removedContact || null;
 }
 
@@ -44,7 +44,6 @@ async function updateStatusContact(id, data) {
 
   return updatedContact || null;
 }
-
 
 export {
   listContacts,

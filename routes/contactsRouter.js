@@ -5,6 +5,7 @@ import {
   deleteContactWrapped,
   createContactWrapped,
   updateContactWrapped,
+  updateFavoriteWrapped,
 } from "../controllers/contactsControllers.js";
 import validateBody from "../helpers/validateBody.js";
 import isValidId from "../helpers/isValidId.js";
@@ -32,7 +33,10 @@ contactsRouter.put(
 );
 
 contactsRouter.patch(
-  '/:id/favorite', isValidId, validateBody(updateFavoriteSchema)
-)
+  "/:id/favorite",
+  isValidId,
+  validateBody(updateFavoriteSchema),
+  updateFavoriteWrapped
+);
 
 export default contactsRouter;

@@ -10,7 +10,7 @@ const getAllContacts = async (req, res) => {
 const getContactById = async (req, res) => {
   const { id } = req.params;
   const contact = await contactsService.getContactById(id);
-
+  
   if (contact) {
     res.json(contact);
   } else {
