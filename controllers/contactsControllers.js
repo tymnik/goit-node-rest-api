@@ -45,8 +45,22 @@ const updateContact = async (req, res) => {
   res.json(updatedContact);
 };
 
+const updateFavorite = async (req, res) => {
+  const { id } = req.params;
+  const updatedContact = await contactsService.updateStatusContact(
+    id,
+    req.body
+  );
+
+  if (!updatedContact) {
+    throw HttpError(404, "Not Found");
+  }
+  res.json(updatedContact);
+};
+
 export const getAllContactsWrapped = ctrlWrapper(getAllContacts);
 export const getContactByIdWrapped = ctrlWrapper(getContactById);
 export const deleteContactWrapped = ctrlWrapper(deleteContact);
 export const createContactWrapped = ctrlWrapper(createContact);
 export const updateContactWrapped = ctrlWrapper(updateContact);
+export const updateFavoriteWrapped = ctrlWrapper(updateFavorite);
