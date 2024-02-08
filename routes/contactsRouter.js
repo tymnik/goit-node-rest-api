@@ -19,13 +19,17 @@ import {
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", authenticate, getAllContactsWrapped);
+
 contactsRouter.get("/:id", authenticate, isValidId, getContactByIdWrapped);
+
 contactsRouter.delete("/:id", authenticate, isValidId, deleteContactWrapped);
+
 contactsRouter.post(
   "/", authenticate,
   validateBody(createContactSchema),
   createContactWrapped
 );
+
 contactsRouter.put(
   "/:id", authenticate,
   validateBody(updateContactSchema),

@@ -3,14 +3,19 @@ import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import { HttpError } from "../helpers/HttpError.js";
 
 const getAllContacts = async (req, res) => {
-  const contacts = await contactsService.listContacts();
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 20 } = req.query;
+  const skip = (page - 1) * limit;
+  const contacts = await contactsService
+    .listContacts({ owner }, "-createdAt -updatedAt", {skip, limit})
+    .populate("owner", "email");
   res.json(contacts);
 };
 
 const getContactById = async (req, res) => {
   const { id } = req.params;
   const contact = await contactsService.getContactById(id);
-  
+
   if (contact) {
     res.json(contact);
   } else {
@@ -30,8 +35,8 @@ const deleteContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
-  const { body } = req;
-  const newContact = await contactsService.addContact(body);
+  const { _id: owner } = req.user;
+  const newContact = await contactsService.addContact({ ...req.body, owner });
   res.status(201).json(newContact);
 };
 
