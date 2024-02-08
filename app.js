@@ -19,6 +19,7 @@ mongoose
   .then(() => {
     app.listen(PORT);
     console.log("Database connection successful");
+    console.log("Server is running. Use our API on port: 3001");
   })
   .catch((error) => {
     console.log(error.message);
@@ -40,9 +41,5 @@ app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;
   res.status(status).json({ message });
 });
-
-// app.listen(3001, () => {
-//   console.log("Server is running. Use our API on port: 3001");
-// });
 
 export default app;
