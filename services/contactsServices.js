@@ -1,8 +1,11 @@
 import { nanoid } from "nanoid";
 import Contact from "../models/contact.js";
 
-async function listContacts() {
-  const contacts = await Contact.find();
+async function listContacts(query = {}, fields = "", options = {}) {
+  const contacts = await Contact.find(query, fields, options).populate(
+    "owner",
+    "email"
+  );
   return contacts;
 }
 
