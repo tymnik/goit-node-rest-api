@@ -1,9 +1,10 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
+import jimp from "jimp";
 import fs from "fs/promises";
 import { fileURLToPath } from "url";
-import path, { dirname } from "path";
+import path from "path";
 import User from "../models/user.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import { HttpError } from "../helpers/HttpError.js";
@@ -93,8 +94,12 @@ const updateSubscription = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
-  const filename = `${_id}_${originalname}`
+  const filename = `${_id}_${originalname}`;
   const resultUpload = path.join(avatarDir, filename);
+
+  const avatar = await jimp.read(tempUpload);
+  avatar.resize(250, 250).write(resultUpload);
+
   await fs.rename(tempUpload, resultUpload);
   const avatarURL = path.join("avatars", filename);
   await User.findByIdAndUpdate(_id, { avatarURL });

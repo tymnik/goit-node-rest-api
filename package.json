@@ -1,6 +1,7 @@
 {
   "name": "goit-node-rest-api",
   "scripts": {
+    "test": "jest",
     "start": "node ./app.js",
     "dev": "nodemon ./app.js"
   },
@@ -20,6 +21,7 @@
     "nanoid": "^5.0.4"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
     "nodemon": "^3.0.3"
   }
 }
