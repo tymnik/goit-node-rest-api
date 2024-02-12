@@ -17,9 +17,6 @@ const userSchema = new Schema(
       required: [true, "Email is required"],
       unique: true,
     },
-    avatar: {
-      avatarURL: String,
-    },
     subscription: {
       type: String,
       enum: ["starter", "pro", "business"],
@@ -29,7 +26,10 @@ const userSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "user",
     },
-    token: String,
+    avatarURL: { type: String },
+    token: {
+      type: String,
+    },
   },
   { versionKey: false, timestamps: true }
 );
