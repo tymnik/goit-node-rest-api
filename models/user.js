@@ -26,7 +26,10 @@ const userSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "user",
     },
-    token: String,
+    avatarURL: { type: String },
+    token: {
+      type: String,
+    },
   },
   { versionKey: false, timestamps: true }
 );

@@ -1,12 +1,14 @@
 import express from "express";
 import authenticate from "../helpers/authenticate.js";
 import validateBody from "../helpers/validateBody.js";
+import upload from "../helpers/upload.js";
 import {
   registerWrapped,
   loginWrapped,
   getCurrentWrapped,
   logoutWrapped,
   updateSubscriptionWrapped,
+  updateAvatarWrapped,
 } from "../controllers/authControllers.js";
 import {
   registerSchema,
@@ -30,5 +32,7 @@ authRouter.patch(
   validateBody(updateSubscriptionSchema),
   updateSubscriptionWrapped
 );
+
+authRouter.patch("/avatars", authenticate, upload.single("avatar"), updateAvatarWrapped);
 
 export default authRouter;
