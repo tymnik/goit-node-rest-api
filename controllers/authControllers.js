@@ -93,12 +93,13 @@ const updateSubscription = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
+  if (!req.file) throw HttpError(400, "File is required");
   const { path: tempUpload, originalname } = req.file;
   const filename = `${_id}_${originalname}`;
   const resultUpload = path.join(avatarDir, filename);
 
   const avatar = await jimp.read(tempUpload);
-  avatar.resize(250, 250).write(resultUpload);
+  avatar.cover(250, 250).write(resultUpload);
 
   await fs.rename(tempUpload, resultUpload);
   const avatarURL = path.join("avatars", filename);
