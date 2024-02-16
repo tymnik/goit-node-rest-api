@@ -4,6 +4,8 @@ import validateBody from "../helpers/validateBody.js";
 import upload from "../helpers/upload.js";
 import {
   registerWrapped,
+  verifyEmailWrapped,
+  resendVerifyEmailWrapped,
   loginWrapped,
   getCurrentWrapped,
   logoutWrapped,
@@ -12,6 +14,7 @@ import {
 } from "../controllers/authControllers.js";
 import {
   registerSchema,
+  emailSchema,
   loginSchema,
   updateSubscriptionSchema,
 } from "../schemas/usersSchemas.js";
@@ -19,6 +22,10 @@ import {
 const authRouter = express.Router();
 
 authRouter.post("/register", validateBody(registerSchema), registerWrapped);
+
+authRouter.get("/verify/:verificationToken", verifyEmailWrapped);
+
+authRouter.post("/verify", validateBody(emailSchema), resendVerifyEmailWrapped);
 
 authRouter.post("/login", validateBody(loginSchema), loginWrapped);
 
@@ -33,6 +40,11 @@ authRouter.patch(
   updateSubscriptionWrapped
 );
 
-authRouter.patch("/avatars", authenticate, upload.single("avatar"), updateAvatarWrapped);
+authRouter.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  updateAvatarWrapped
+);
 
 export default authRouter;
